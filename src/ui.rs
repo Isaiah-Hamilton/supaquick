@@ -1,6 +1,8 @@
 extern crate termion;
 
+use termion::clear::CurrentLine;
 use termion::color;
+use termion::cursor::{BlinkingBlock, Down, Hide, Left, Restore, Right, Show, Up};
 use termion::event::{Event, Key};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
@@ -20,7 +22,7 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
         print!("\x1b[90m"); // light grey
         print!("{}{}", placeholder, color::Fg(color::Reset));
         io::stdout().flush().unwrap();
-        Cursor::shift("left", placeholder.len() as u8);
+        Cursor::left(placeholder.len() as u16);
     }
 
     for c in stdin().keys() {
@@ -41,8 +43,8 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
                 input.push_str(c.to_string().as_str());
                 if !input.is_empty() && !placeholder.is_empty() && ph {
                     // TODO: refactor this
-                    print!("\x1B[{}C", placeholder.len()); // go forward the length of placeholder
-                    Cursor::backspace(placeholder.len() as u8);
+                    Cursor::right(placeholder.len() as u16);
+                    Cursor::backspace(placeholder.len() as u16);
                     ph = false;
                 }
             }
@@ -56,7 +58,7 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
                     print!("\x1b[90m"); // light grey
                     print!("{}{}", placeholder, color::Fg(color::Reset));
                     io::stdout().flush().unwrap();
-                    Cursor::shift("left", placeholder.len() as u8);
+                    Cursor::left(placeholder.len() as u16);
                     ph = true;
                 }
             }
@@ -126,7 +128,7 @@ pub fn list(text: &str, frameworks: &[&str]) -> String {
             stdout.flush().unwrap();
         }
 
-        print!("\x1B[{}A", frameworks.len() + 1); // Move the cursor up by the list text
+        Cursor::up(frameworks.len() as u16 + 1);
         io::stdout().flush().unwrap();
     }
 }
@@ -148,37 +150,104 @@ pub fn logo() {
     println!("Press ESC to exit\n");
 }
 
+pub fn option(text: &str, options: &[&str]) -> String {
+    let mut stdout = stdout().into_raw_mode().unwrap();
+
+    let mut selected_index = 0;
+
+    Cursor::hide();
+
+    loop {
+        print!("{}", text);
+        io::stdout().flush().unwrap();
+
+        for (index, o) in options.iter().enumerate() {
+            if index == selected_index {
+                print!(
+                    "{}{}{}",
+                    color::Fg(color::Green),
+                    o,
+                    color::Fg(color::Reset),
+                )
+            } else {
+                print!("{}", o);
+            }
+            if index + 1 != options.len() {
+                print!(" / ");
+            }
+            io::stdout().flush().unwrap();
+        }
+
+        for c in io::stdin().events() {
+            match c.unwrap() {
+                Event::Key(Key::Char('h')) | Event::Key(Key::Left) => {
+                    selected_index = (selected_index + 1) % options.len();
+                    break;
+                }
+                Event::Key(Key::Char('l')) | Event::Key(Key::Right) => {
+                    if selected_index > 0 {
+                        selected_index -= 1;
+                    } else {
+                        selected_index = options.len() - 1;
+                    }
+                    break;
+                }
+                Event::Key(Key::Char('\n')) => {
+                    Cursor::show();
+                    Cursor::new_line();
+                    Cursor::beginning();
+                    return options[selected_index].to_string();
+                }
+                _ => {}
+            }
+            stdout.flush().unwrap();
+        }
+        Cursor::clear_line();
+        Cursor::beginning();
+    }
+}
+
 struct Cursor;
 
 impl Cursor {
     fn show() {
-        print!("\x1b[?25h");
-        io::stdout().flush().unwrap();
+        print!("{}", Show);
     }
 
     fn hide() {
-        print!("\x1b[?25l");
-        io::stdout().flush().unwrap();
+        print!("{}", Hide);
     }
 
-    fn shift(direction: &str, count: u8) {
-        if direction == "left" {
-            let mut i = 0;
-            while i != count {
-                print!("\x08");
-                i += 1;
-            }
-            io::stdout().flush().unwrap();
-        }
+    fn blink() {
+        print!("{}", BlinkingBlock);
     }
 
-    fn backspace(count: u8) {
-        let mut i = 0;
-        while i != count {
-            print!("\x08 \x08");
-            i += 1;
-        }
-        io::stdout().flush().unwrap();
+    fn restore() {
+        print!("{}", Restore);
+    }
+
+    fn clear_line() {
+        print!("{}", CurrentLine);
+    }
+
+    fn left(count: u16) {
+        print!("{}", Left(count));
+    }
+
+    fn down(count: u16) {
+        print!("{}", Down(count));
+    }
+
+    fn up(count: u16) {
+        print!("{}", Up(count));
+    }
+
+    fn right(count: u16) {
+        print!("{}", Right(count));
+    }
+
+    fn backspace(count: u16) {
+        print!("{} {}", Left(count), Left(count));
     }
 
     fn beginning() {

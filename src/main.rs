@@ -1,12 +1,11 @@
 mod ui;
 
-use ui::{input, list, logo};
+use ui::{input, list, logo, option};
 
 fn main() {
     logo();
-
-    let mut access_token = String::from("");
-
+    let options = ["Yes", "No"];
+    let option = option("Do you want to use tailwindcss: ", &options);
     let frameworks = [
         "Next.js",
         "React",
@@ -19,11 +18,6 @@ fn main() {
         "Vue",
         // "refine",
     ];
-
-    if access_token.is_empty() {
-        let new_access_token = input("access token: ", "123", "");
-        access_token = new_access_token;
-    }
 
     // Get project name
     let name = input("What is your project named: ", "my-app", "my-app");
@@ -46,8 +40,8 @@ fn main() {
     // // TODO: Get annon key from user
     // // TODO: Get service_role secret from user (might not need)
 
+    println!("option: {}", option);
     println!("name: {}", name);
     println!("framework: {}", framework);
     println!("framework template: {}", framework_template);
-    println!("access token: {}", access_token);
 }
