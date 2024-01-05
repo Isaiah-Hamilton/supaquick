@@ -4,44 +4,54 @@ use ui::{input, list, logo, option};
 
 fn main() {
     logo();
-    let options = ["Yes", "No"];
-    let option = option("Do you want to use tailwindcss: ", &options);
+    let import_options = ["Automatic", "Manual"];
     let frameworks = [
         "Next.js",
         "React",
-        // "NuxtJS",
-        // "RedwoodJS",
-        // "Flutter",
-        // "Android Kotlin",
+        "NuxtJS",
+        "RedwoodJS",
+        "Flutter",
+        "Android Kotlin",
         "SvelteKit",
         "SolidJS",
         "Vue",
-        // "refine",
+        "refine",
     ];
 
-    // Get project name
     let name = input("What is your project named: ", "my-app", "my-app");
-    // Get framework
     let framework = list("Choose a framework:", &frameworks);
-    // Get framework template
     let framework_template = list("Choose a template:", &frameworks);
+    let import_option = option(
+        "Import Supabase project automatically or manually: ",
+        &import_options,
+    );
 
-    // let access_token = input("access token: ", "none");
+    if import_option == import_options[0] {
+        automatic_import();
+    } else {
+        let project_url = input("Project url: ", "", "");
+        let project_anon_key = input("What is your Project anon key: ", "", "");
+    }
+}
 
-    // TODO: Pick a framework template
+fn automatic_import() {
+    let organizations = ["supabase", "Isaiah-Hamilton"];
+    let options = ["New", "Existing"];
+    let existing_projects = ["test", "test2"];
+    let regions = ["north america", "south america"];
 
-    // TODO: Pick an organization
+    let access_token = input("access token: ", "", "");
+    let organization = list("Choose an organization:", &organizations);
+    let new_project = option(
+        "Create new Supabase project or use existing project: ",
+        &options,
+    );
 
-    // TODO: use existing supabase project or create new project
-    // // TODO: if new then pick a supabase project name
-    // // TODO: Pick a database password (auto gen???)
-    // // TODO: Pick database location
-    // // TODO: Pick a plan
-    // // TODO: Get annon key from user
-    // // TODO: Get service_role secret from user (might not need)
-
-    println!("option: {}", option);
-    println!("name: {}", name);
-    println!("framework: {}", framework);
-    println!("framework template: {}", framework_template);
+    if new_project == options[0] {
+        let project_name = input("What is your project named: ", "", "");
+        let database_password = input("What is your database password: ", "", "");
+        let project_region = list("Where is your project location: ", &regions);
+    } else {
+        let project = list("Choose an existing porject:", &existing_projects);
+    }
 }
