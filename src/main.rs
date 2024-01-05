@@ -1,8 +1,10 @@
 mod ui;
 
-use ui::{input, list};
+use ui::{input, list, logo};
 
 fn main() {
+    logo();
+
     let mut access_token = String::from("");
 
     let frameworks = [
