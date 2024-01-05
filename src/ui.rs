@@ -212,42 +212,56 @@ struct Cursor;
 impl Cursor {
     fn show() {
         print!("{}", Show);
+        io::stdout().flush().unwrap();
     }
 
     fn hide() {
         print!("{}", Hide);
+        io::stdout().flush().unwrap();
     }
 
     fn blink() {
         print!("{}", BlinkingBlock);
+        io::stdout().flush().unwrap();
     }
 
     fn restore() {
         print!("{}", Restore);
+        io::stdout().flush().unwrap();
     }
 
     fn clear_line() {
         print!("{}", CurrentLine);
+        io::stdout().flush().unwrap();
     }
 
     fn left(count: u16) {
         print!("{}", Left(count));
+        io::stdout().flush().unwrap();
     }
 
     fn down(count: u16) {
         print!("{}", Down(count));
+        io::stdout().flush().unwrap();
     }
 
     fn up(count: u16) {
         print!("{}", Up(count));
+        io::stdout().flush().unwrap();
     }
 
     fn right(count: u16) {
         print!("{}", Right(count));
+        io::stdout().flush().unwrap();
     }
 
     fn backspace(count: u16) {
-        print!("{} {}", Left(count), Left(count));
+        let mut i = 0;
+        while i != count {
+            print!("\x08 \x08");
+            i += 1;
+        }
+        io::stdout().flush().unwrap();
     }
 
     fn beginning() {
