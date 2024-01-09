@@ -8,7 +8,7 @@ fn main() {
 
     let project_name = get_project_name();
 
-    let import_options = ["Automatic", "Manual"];
+    let import_options = ["Manual", "Automatic"];
     let frameworks = [
         "Nextjs",
         // "React",
@@ -31,8 +31,6 @@ fn main() {
     );
 
     if import_option == import_options[0] {
-        automatic_import();
-    } else {
         let project_url = ui::input("Project url: ", "", "");
         let project_anon_key = ui::input("What is your Project anon key: ", "", "");
 
@@ -42,6 +40,8 @@ fn main() {
             &project_name,
         );
         create_env(&project_name, &project_url, &project_anon_key);
+    } else {
+        automatic_import();
     }
 
     ui::footer(&project_name);
