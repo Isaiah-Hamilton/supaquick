@@ -73,7 +73,7 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
     input.trim().to_string()
 }
 
-pub fn list(text: &str, frameworks: &[&str]) -> String {
+pub fn list(text: &str, options: &[&str]) -> String {
     let mut stdout = stdout().into_raw_mode().unwrap();
 
     let mut selected_index = 0;
@@ -84,7 +84,7 @@ pub fn list(text: &str, frameworks: &[&str]) -> String {
         println!("{}", text);
         Cursor::beginning();
 
-        for (index, f) in frameworks.iter().enumerate() {
+        for (index, f) in options.iter().enumerate() {
             if index == selected_index {
                 println!(
                     "{}>{} {}. {}",
@@ -103,14 +103,14 @@ pub fn list(text: &str, frameworks: &[&str]) -> String {
         for c in io::stdin().events() {
             match c.unwrap() {
                 Event::Key(Key::Char('j')) | Event::Key(Key::Down) => {
-                    selected_index = (selected_index + 1) % frameworks.len();
+                    selected_index = (selected_index + 1) % options.len();
                     break;
                 }
                 Event::Key(Key::Char('k')) | Event::Key(Key::Up) => {
                     if selected_index > 0 {
                         selected_index -= 1;
                     } else {
-                        selected_index = frameworks.len() - 1;
+                        selected_index = options.len() - 1;
                     }
                     break;
                 }
@@ -121,14 +121,14 @@ pub fn list(text: &str, frameworks: &[&str]) -> String {
                 }
                 Event::Key(Key::Char('\n')) => {
                     Cursor::show();
-                    return frameworks[selected_index].to_string();
+                    return options[selected_index].to_string();
                 }
                 _ => {}
             }
             stdout.flush().unwrap();
         }
 
-        Cursor::up(frameworks.len() as u16 + 1);
+        Cursor::up(options.len() as u16 + 1);
         io::stdout().flush().unwrap();
     }
 }

@@ -31,9 +31,9 @@ fn main() {
 
     project_name();
 
-    let import_options = ["Manual", "Automatic"];
+    let import_options = ["Automatic", "Manual"];
     let frameworks = [
-        "Next.js",
+        "Nextjs",
         "React",
         "NuxtJS",
         "RedwoodJS",
@@ -46,7 +46,7 @@ fn main() {
     ];
 
     let framework = ui::list("Choose a framework:", &frameworks);
-    let framework_template = ui::list("Choose a template:", &frameworks);
+    let template = ui::list("Choose a template:", &frameworks);
     let import_option = ui::option(
         "Import Supabase project automatically or manually: ",
         &import_options,
