@@ -62,6 +62,9 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
                     ph = true;
                 }
             }
+            Key::Esc => {
+                std::process::exit(0);
+            }
             _ => {}
         }
         stdout.flush().unwrap();
@@ -114,10 +117,8 @@ pub fn list(text: &str, options: &[&str]) -> String {
                     }
                     break;
                 }
-                Event::Key(Key::Char('q')) => {
-                    println!("you quit");
-                    Cursor::show();
-                    return String::new();
+                Event::Key(Key::Esc) => {
+                    std::process::exit(0);
                 }
                 Event::Key(Key::Char('\n')) => {
                     Cursor::show();
@@ -197,6 +198,9 @@ pub fn option(text: &str, options: &[&str]) -> String {
                     Cursor::new_line();
                     Cursor::beginning();
                     return options[selected_index].to_string();
+                }
+                Event::Key(Key::Esc) => {
+                    std::process::exit(0);
                 }
                 _ => {}
             }
