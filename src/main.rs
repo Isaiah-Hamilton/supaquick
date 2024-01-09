@@ -2,7 +2,7 @@ mod ui;
 mod utils;
 
 use termion::color;
-use utils::directory_exists;
+use utils::{create_project, directory_exists};
 
 fn project_name() -> String {
     loop {
@@ -29,24 +29,25 @@ fn project_name() -> String {
 fn main() {
     ui::logo();
 
-    project_name();
+    let project_name = project_name();
 
     let import_options = ["Automatic", "Manual"];
     let frameworks = [
         "Nextjs",
-        "React",
-        "NuxtJS",
-        "RedwoodJS",
-        "Flutter",
-        "Android Kotlin",
-        "SvelteKit",
-        "SolidJS",
-        "Vue",
-        "refine",
+        // "React",
+        // "NuxtJS",
+        // "RedwoodJS",
+        // "Flutter",
+        // "Android Kotlin",
+        // "SvelteKit",
+        // "SolidJS",
+        // "Vue",
+        // "refine",
     ];
+    let templates = ["app", "app-tw", "default", "default-tw"];
 
     let framework = ui::list("Choose a framework:", &frameworks);
-    let template = ui::list("Choose a template:", &frameworks);
+    let template = ui::list("Choose a template:", &templates);
     let import_option = ui::option(
         "Import Supabase project automatically or manually: ",
         &import_options,
@@ -58,6 +59,9 @@ fn main() {
         let project_url = ui::input("Project url: ", "", "");
         let project_anon_key = ui::input("What is your Project anon key: ", "", "");
     }
+
+    let src = "./templates/".to_owned() + &framework + "/" + &template;
+    create_project(src, project_name);
 }
 
 fn automatic_import() {
