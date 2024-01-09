@@ -1,6 +1,9 @@
 [package]
 name = "supaquick"
 version = "0.1.0"
+description = "A simple CLI tool to create apps powered by Supabase"
+repository = "https://github.com/isaiah-hamilton/supaquick"
+categories = ["command-line-interface"]
 edition = "2021"
 
 [dependencies]
