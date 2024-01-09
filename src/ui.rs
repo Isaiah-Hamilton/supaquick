@@ -2,7 +2,7 @@ extern crate termion;
 
 use termion::clear::CurrentLine;
 use termion::color;
-use termion::cursor::{BlinkingBlock, Down, Hide, Left, Restore, Right, Show, Up};
+use termion::cursor::{BlinkingBlock, Down, Hide, Left, Restore, Right, Show, SteadyBlock, Up};
 use termion::event::{Event, Key};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
@@ -25,16 +25,21 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
         Cursor::left(placeholder.len() as u16);
     }
 
+    Cursor::blink();
+
     for c in stdin().keys() {
         match c.unwrap() {
             Key::Char('\n') => {
                 if input.is_empty() && !default.is_empty() {
                     input.push_str(default);
+                    Cursor::steady();
                     break;
                 } else if input.is_empty() && default.is_empty() {
                     // TODO: make input have a required parm instead
+                    Cursor::steady();
                     break;
                 } else {
+                    Cursor::steady();
                     break;
                 }
             }
@@ -63,6 +68,7 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
                 }
             }
             Key::Esc => {
+                Cursor::steady();
                 std::process::exit(0);
             }
             _ => {}
@@ -238,6 +244,11 @@ impl Cursor {
 
     pub fn blink() {
         print!("{}", BlinkingBlock);
+        io::stdout().flush().unwrap();
+    }
+
+    pub fn steady() {
+        print!("{}", SteadyBlock);
         io::stdout().flush().unwrap();
     }
 
