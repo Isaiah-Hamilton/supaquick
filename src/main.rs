@@ -37,8 +37,11 @@ fn main() {
         let project_anon_key = ui::input("What is your Project anon key: ", "", "");
     }
 
-    let src = "./templates/".to_owned() + &framework + "/" + &template;
-    create_project(src, project_name);
+    create_project(
+        // TODO: this can be better
+        "./templates/".to_owned() + &framework + "/" + &template,
+        project_name,
+    );
 }
 
 fn automatic_import() {
