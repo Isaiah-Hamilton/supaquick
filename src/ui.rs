@@ -207,6 +207,16 @@ pub fn option(text: &str, options: &[&str]) -> String {
     }
 }
 
+pub fn footer(name: &str) {
+    Cursor::new_line();
+    println!(
+        "{}Success!{} {} has been created",
+        color::Fg(color::Green),
+        color::Fg(color::Reset),
+        name
+    );
+}
+
 pub struct Cursor;
 
 impl Cursor {

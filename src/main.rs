@@ -43,6 +43,8 @@ fn main() {
         );
         create_env(&project_name, &project_url, &project_anon_key);
     }
+
+    ui::footer(&project_name);
 }
 
 fn automatic_import() {
