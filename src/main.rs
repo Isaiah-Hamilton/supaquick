@@ -1,35 +1,12 @@
 mod ui;
 mod utils;
 
-use termion::color;
-use utils::{create_project, directory_exists};
-
-fn project_name() -> String {
-    loop {
-        let project_name = ui::input("What is your project named: ", "my-app", "my-app");
-
-        if directory_exists(&project_name) {
-            print!(
-                "{}{} already exists{}",
-                color::Fg(color::Red),
-                project_name,
-                color::Fg(color::Reset)
-            );
-            ui::Cursor::up(1);
-            ui::Cursor::clear_line();
-            ui::Cursor::beginning();
-            continue;
-        }
-        ui::Cursor::down(1);
-        ui::Cursor::clear_line();
-        return project_name;
-    }
-}
+use utils::{create_project, get_project_name};
 
 fn main() {
     ui::logo();
 
-    let project_name = project_name();
+    let project_name = get_project_name();
 
     let import_options = ["Automatic", "Manual"];
     let frameworks = [
