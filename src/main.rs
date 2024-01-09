@@ -1,7 +1,7 @@
 mod ui;
 mod utils;
 
-use utils::{create_project, get_project_name};
+use utils::{create_env, create_project, get_project_name};
 
 fn main() {
     ui::logo();
@@ -35,13 +35,14 @@ fn main() {
     } else {
         let project_url = ui::input("Project url: ", "", "");
         let project_anon_key = ui::input("What is your Project anon key: ", "", "");
-    }
 
-    create_project(
-        // TODO: this can be better
-        "./templates/".to_owned() + &framework + "/" + &template,
-        project_name,
-    );
+        create_project(
+            // TODO: this can be better
+            "./templates/".to_owned() + &framework + "/" + &template,
+            &project_name,
+        );
+        create_env(&project_name, &project_url, &project_anon_key);
+    }
 }
 
 fn automatic_import() {

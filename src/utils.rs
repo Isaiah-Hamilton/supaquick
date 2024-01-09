@@ -37,6 +37,15 @@ pub fn create_project(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Resul
     Ok(())
 }
 
+pub fn create_env(dst: &str, project_url: &str, project_anon_key: &str) -> io::Result<()> {
+    fs::write(
+        // TODO: this can be better
+        dst.to_string() + "/.env",
+        "SUPABASE_URL=".to_string() + project_url + "\nSUPABASE_ANON_KEY=" + project_anon_key,
+    )?;
+    Ok(())
+}
+
 pub fn get_project_name() -> String {
     loop {
         let project_name = ui::input("What is your project named: ", "my-app", "my-app");
