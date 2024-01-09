@@ -207,55 +207,55 @@ pub fn option(text: &str, options: &[&str]) -> String {
     }
 }
 
-struct Cursor;
+pub struct Cursor;
 
 impl Cursor {
-    fn show() {
+    pub fn show() {
         print!("{}", Show);
         io::stdout().flush().unwrap();
     }
 
-    fn hide() {
+    pub fn hide() {
         print!("{}", Hide);
         io::stdout().flush().unwrap();
     }
 
-    fn blink() {
+    pub fn blink() {
         print!("{}", BlinkingBlock);
         io::stdout().flush().unwrap();
     }
 
-    fn restore() {
+    pub fn restore() {
         print!("{}", Restore);
         io::stdout().flush().unwrap();
     }
 
-    fn clear_line() {
+    pub fn clear_line() {
         print!("{}", CurrentLine);
         io::stdout().flush().unwrap();
     }
 
-    fn left(count: u16) {
+    pub fn left(count: u16) {
         print!("{}", Left(count));
         io::stdout().flush().unwrap();
     }
 
-    fn down(count: u16) {
+    pub fn down(count: u16) {
         print!("{}", Down(count));
         io::stdout().flush().unwrap();
     }
 
-    fn up(count: u16) {
+    pub fn up(count: u16) {
         print!("{}", Up(count));
         io::stdout().flush().unwrap();
     }
 
-    fn right(count: u16) {
+    pub fn right(count: u16) {
         print!("{}", Right(count));
         io::stdout().flush().unwrap();
     }
 
-    fn backspace(count: u16) {
+    pub fn backspace(count: u16) {
         let mut i = 0;
         while i != count {
             print!("\x08 \x08");
@@ -264,12 +264,12 @@ impl Cursor {
         io::stdout().flush().unwrap();
     }
 
-    fn beginning() {
+    pub fn beginning() {
         print!("\r");
         io::stdout().flush().unwrap();
     }
 
-    fn new_line() {
+    pub fn new_line() {
         println!();
     }
 }
