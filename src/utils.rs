@@ -1,4 +1,4 @@
-use crate::ui;
+use crate::ui::{self, Cursor};
 use termion::color;
 
 use std::path::Path;
@@ -47,23 +47,34 @@ pub fn create_env(dst: &str, project_url: &str, project_anon_key: &str) -> io::R
 }
 
 pub fn get_project_name() -> String {
-    loop {
-        let project_name = ui::input("What is your project named: ", "my-app", "my-app");
+    let project_name = ui::input("What is your project named: ", "my-app", "my-app");
 
-        if directory_exists(&project_name) {
-            print!(
-                "{}{} already exists{}",
-                color::Fg(color::Red),
-                project_name,
-                color::Fg(color::Reset)
-            );
-            ui::Cursor::up(1);
-            ui::Cursor::clear_line();
-            ui::Cursor::beginning();
-            continue;
+    if directory_exists(&project_name) {
+        let paths = fs::read_dir(&project_name).unwrap();
+
+        println!(
+            "The directory {} contains files that could conflict:",
+            project_name,
+        );
+        Cursor::new_line();
+        for path in paths {
+            let display_path = path
+                .as_ref()
+                .unwrap()
+                .path()
+                .display()
+                .to_string()
+                .replace(&format!("{}/", project_name), "");
+
+            if path.unwrap().path().is_dir() {
+                println!("{}/", display_path);
+            } else {
+                println!("{}", display_path);
+            }
         }
-        ui::Cursor::down(1);
-        ui::Cursor::clear_line();
-        return project_name;
+        Cursor::new_line();
+        println!("Either try using a new directory name, or remove the files listed above.");
+        std::process::exit(0);
     }
+    return project_name;
 }
