@@ -1,5 +1,4 @@
-use crate::ui::{self, Cursor};
-use termion::color;
+use crate::ui;
 
 use std::path::Path;
 use std::{fs, io};
@@ -56,7 +55,7 @@ pub fn get_project_name() -> String {
             "The directory {} contains files that could conflict:",
             project_name,
         );
-        Cursor::new_line();
+        ui::Cursor::new_line();
         for path in paths {
             let display_path = path
                 .as_ref()
@@ -72,7 +71,7 @@ pub fn get_project_name() -> String {
                 println!("{}", display_path);
             }
         }
-        Cursor::new_line();
+        ui::Cursor::new_line();
         println!("Either try using a new directory name, or remove the files listed above.");
         std::process::exit(0);
     }
