@@ -118,6 +118,7 @@ pub fn list(text: &str, options: &[&str]) -> String {
                     break;
                 }
                 Event::Key(Key::Esc) => {
+                    Cursor::show();
                     std::process::exit(0);
                 }
                 Event::Key(Key::Char('\n')) => {
@@ -200,6 +201,7 @@ pub fn option(text: &str, options: &[&str]) -> String {
                     return options[selected_index].to_string();
                 }
                 Event::Key(Key::Esc) => {
+                    Cursor::show();
                     std::process::exit(0);
                 }
                 _ => {}
