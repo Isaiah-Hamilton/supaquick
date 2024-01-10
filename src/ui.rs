@@ -171,6 +171,7 @@ pub fn logo() {
 }
 
 pub fn option(text: &str, options: &[&str]) -> String {
+    // Enable raw mode for stdout
     let mut stdout = stdout().into_raw_mode().unwrap();
 
     let mut selected_index = 0;
@@ -178,9 +179,11 @@ pub fn option(text: &str, options: &[&str]) -> String {
     Cursor::hide();
 
     loop {
+        // Display prompt text
         print!("{}", text);
         io::stdout().flush().unwrap();
 
+        // Display options with highlighting for the selected index
         for (index, o) in options.iter().enumerate() {
             if index == selected_index {
                 print!(
