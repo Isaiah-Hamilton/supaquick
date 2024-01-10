@@ -232,56 +232,68 @@ pub fn footer(name: &str) {
 pub struct Cursor;
 
 impl Cursor {
+    /// Show cursor
     pub fn show() {
         print!("{}", Show);
         io::stdout().flush().unwrap();
     }
 
+    /// Hide cursor
     pub fn hide() {
         print!("{}", Hide);
         io::stdout().flush().unwrap();
     }
 
+    // TODO: use the cursor style that the user uses ex: block, underline, bar
+    /// Make cursor blink (For input component only)
     pub fn blink() {
         print!("{}", BlinkingBlock);
         io::stdout().flush().unwrap();
     }
 
+    /// Make cursor steady (Turns off cursor blink)
     pub fn steady() {
         print!("{}", SteadyBlock);
         io::stdout().flush().unwrap();
     }
 
+    /// Restores the cursor to its defualt state
     pub fn restore() {
         print!("{}", Restore);
         io::stdout().flush().unwrap();
     }
 
+    /// Clears the current line
     pub fn clear_line() {
         print!("{}", CurrentLine);
         io::stdout().flush().unwrap();
     }
 
+    /// Moves the cursor to the left by the given count
     pub fn left(count: u16) {
         print!("{}", Left(count));
         io::stdout().flush().unwrap();
     }
 
+    /// Moves the cursor to the down by the given count
     pub fn down(count: u16) {
         print!("{}", Down(count));
         io::stdout().flush().unwrap();
     }
 
+    /// Moves the cursor to the up by the given count
     pub fn up(count: u16) {
         print!("{}", Up(count));
         io::stdout().flush().unwrap();
     }
 
+    /// Moves the cursor to the right by the given count
     pub fn right(count: u16) {
         print!("{}", Right(count));
         io::stdout().flush().unwrap();
     }
 
+    /// Simulate backspace (For input component only)
     pub fn backspace(count: u16) {
         let mut i = 0;
         while i != count {
@@ -291,11 +303,13 @@ impl Cursor {
         io::stdout().flush().unwrap();
     }
 
+    /// Move cursor to the beginning of the current line
     pub fn beginning() {
         print!("\r");
         io::stdout().flush().unwrap();
     }
 
+    /// Create new line
     pub fn new_line() {
         println!();
     }
