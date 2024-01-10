@@ -9,6 +9,17 @@ use termion::raw::IntoRawMode;
 
 use std::io::{self, stdin, stdout, Write};
 
+/// Obtains user input from the command line, with support for a default value and placeholder text.
+///
+/// # Arguments
+///
+/// * `text` - The prompt text displayed to the user.
+/// * `placeholder` - Optional placeholder text displayed before user input.
+/// * `default` - Optional default value for the input field.
+///
+/// # Returns
+///
+/// A String containing the user's input.
 pub fn input(text: &str, placeholder: &str, default: &str) -> String {
     // Enable raw mode for stdout
     let mut stdout = stdout().into_raw_mode().unwrap();
@@ -91,6 +102,16 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
     input.trim().to_string()
 }
 
+/// Displays a list of options to the user and allows them to select one.
+///
+/// # Arguments
+///
+/// * `text` - The prompt text displayed to the user.
+/// * `options` - A slice of strings representing the available options.
+///
+/// # Returns
+///
+/// A String containing the selected option.
 pub fn list(text: &str, options: &[&str]) -> String {
     // Enable raw mode for stdout
     let mut stdout = stdout().into_raw_mode().unwrap();
@@ -153,6 +174,7 @@ pub fn list(text: &str, options: &[&str]) -> String {
     }
 }
 
+/// Displays the Supaquick logo in the terminal.
 pub fn logo() {
     println!(
         r#"
@@ -170,6 +192,16 @@ pub fn logo() {
     println!("Press ESC to exit\n");
 }
 
+/// Displays a menu with options and allows the user to select one.
+///
+/// # Arguments
+///
+/// * `text` - The prompt text displayed to the user.
+/// * `options` - A slice of strings representing the available options.
+///
+/// # Returns
+///
+/// A String containing the selected option.
 pub fn option(text: &str, options: &[&str]) -> String {
     // Enable raw mode for stdout
     let mut stdout = stdout().into_raw_mode().unwrap();
@@ -234,6 +266,11 @@ pub fn option(text: &str, options: &[&str]) -> String {
     }
 }
 
+/// Displays a success message in the terminal when the cli has ran successfully.
+///
+/// # Arguments
+///
+/// * `name` - The name of the project for which was successfully created.
 pub fn footer(name: &str) {
     Cursor::new_line();
     println!(
@@ -244,71 +281,72 @@ pub fn footer(name: &str) {
     );
 }
 
+/// Represents a text cursor for controlling the display of text in the terminal.
 pub struct Cursor;
 
 impl Cursor {
-    /// Show cursor
+    /// Displays the cursor.
     pub fn show() {
         print!("{}", Show);
         io::stdout().flush().unwrap();
     }
 
-    /// Hide cursor
+    /// Hides the cursor.
     pub fn hide() {
         print!("{}", Hide);
         io::stdout().flush().unwrap();
     }
 
-    // TODO: use the cursor style that the user uses ex: block, underline, bar
-    /// Make cursor blink (For input component only)
+    // TODO: Use the cursor style that the user prefers (e.g., block, underline, bar).
+    /// Makes the cursor blink (intended for input components).
     pub fn blink() {
         print!("{}", BlinkingBlock);
         io::stdout().flush().unwrap();
     }
 
-    /// Make cursor steady (Turns off cursor blink)
+    /// Makes the cursor steady, turning off its blink (intended for input components).
     pub fn steady() {
         print!("{}", SteadyBlock);
         io::stdout().flush().unwrap();
     }
 
-    /// Restores the cursor to its defualt state
+    /// Restores the cursor to its default state.
     pub fn restore() {
         print!("{}", Restore);
         io::stdout().flush().unwrap();
     }
 
-    /// Clears the current line
+    /// Clears the current line where the cursor is located.
     pub fn clear_line() {
         print!("{}", CurrentLine);
         io::stdout().flush().unwrap();
     }
 
-    /// Moves the cursor to the left by the given count
+    /// Moves the cursor to the left by the given count.
     pub fn left(count: u16) {
         print!("{}", Left(count));
         io::stdout().flush().unwrap();
     }
 
-    /// Moves the cursor to the down by the given count
+    /// Moves the cursor to the left by the given count.
     pub fn down(count: u16) {
         print!("{}", Down(count));
         io::stdout().flush().unwrap();
     }
 
-    /// Moves the cursor to the up by the given count
+    /// Moves the cursor to the left by the given count.
     pub fn up(count: u16) {
         print!("{}", Up(count));
         io::stdout().flush().unwrap();
     }
 
-    /// Moves the cursor to the right by the given count
+    /// Moves the cursor to the left by the given count.
     pub fn right(count: u16) {
         print!("{}", Right(count));
         io::stdout().flush().unwrap();
     }
 
-    /// Simulate backspace (For input component only)
+    /// Simulates a backspace by moving the cursor to the left by the given count.
     pub fn backspace(count: u16) {
         let mut i = 0;
         while i != count {
@@ -318,13 +356,13 @@ impl Cursor {
         io::stdout().flush().unwrap();
     }
 
-    /// Move cursor to the beginning of the current line
+    /// Moves the cursor to the beginning of the current line.
     pub fn beginning() {
         print!("\r");
         io::stdout().flush().unwrap();
     }
 
-    /// Create new line
+    /// Creates a new line.
     pub fn new_line() {
         println!();
     }
