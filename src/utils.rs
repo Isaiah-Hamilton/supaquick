@@ -1,25 +1,22 @@
 use crate::ui;
+use std::fs;
+use std::io::{self, Write};
+use std::path::{Path, PathBuf};
 
-use std::path::Path;
-use std::{fs, io};
-
-fn directory_exists(directory: &str) -> bool {
-    let prefixed_directory = if directory.starts_with("./") {
+fn normalize_directory(directory: &str) -> String {
+    if directory.starts_with("./") {
         directory.to_string()
     } else {
         format!("./{}", directory)
-    };
+    }
+}
 
+fn directory_exists(directory: &str) -> bool {
+    let prefixed_directory = normalize_directory(directory);
     let dirs = fs::read_dir("./").unwrap();
 
-    let dir_exists = dirs
-        .filter_map(|entry| entry.ok())
-        .any(|entry| entry.path().display().to_string() == prefixed_directory);
-
-    if dir_exists {
-        return true;
-    }
-    return false;
+    dirs.filter_map(|entry| entry.ok())
+        .any(|entry| entry.path().display().to_string() == prefixed_directory)
 }
 
 pub fn create_project(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
@@ -27,21 +24,22 @@ pub fn create_project(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Resul
     for entry in fs::read_dir(src)? {
         let entry = entry?;
         let ty = entry.file_type()?;
+        let dest_path = dst.as_ref().join(entry.file_name());
         if ty.is_dir() {
-            create_project(entry.path(), dst.as_ref().join(entry.file_name()))?;
+            create_project(entry.path(), dest_path)?;
         } else {
-            fs::copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
+            fs::copy(entry.path(), dest_path)?;
         }
     }
     Ok(())
 }
 
 pub fn create_env(dst: &str, project_url: &str, project_anon_key: &str) -> io::Result<()> {
-    fs::write(
-        // TODO: this can be better
-        dst.to_string() + "/.env",
-        "SUPABASE_URL=".to_string() + project_url + "\nSUPABASE_ANON_KEY=" + project_anon_key,
-    )?;
+    let env_content = format!(
+        "SUPABASE_URL={}\nSUPABASE_ANON_KEY={}",
+        project_url, project_anon_key
+    );
+    fs::write(format!("{}/.env", dst), env_content)?;
     Ok(())
 }
 
@@ -75,5 +73,5 @@ pub fn get_project_name() -> String {
         println!("Either try using a new directory name, or remove the files listed above.");
         std::process::exit(0);
     }
-    return project_name;
+    project_name
 }
