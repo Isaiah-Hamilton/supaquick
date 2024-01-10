@@ -10,17 +10,24 @@ use termion::raw::IntoRawMode;
 use std::io::{self, stdin, stdout, Write};
 
 pub fn input(text: &str, placeholder: &str, default: &str) -> String {
+    // Enable raw mode for stdout
     let mut stdout = stdout().into_raw_mode().unwrap();
 
+    // Initialize variables
     let mut input = String::new();
-    let mut ph = true;
+    let mut placeholder_visible = true;
 
+    // Print input prompt
     print!("{}", text);
     io::stdout().flush().unwrap();
 
+    // Display placeholder if provided
     if !placeholder.is_empty() {
-        print!("\x1b[90m"); // light grey
-        print!("{}{}", placeholder, color::Fg(color::Reset));
+        print!(
+            "\x1b[90m{}{}", // light grey
+            placeholder,
+            termion::color::Fg(termion::color::Reset)
+        );
         io::stdout().flush().unwrap();
         Cursor::left(placeholder.len() as u16);
     }
@@ -31,26 +38,23 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
         match c.unwrap() {
             Key::Char('\n') => {
                 if input.is_empty() && !default.is_empty() {
+                    // TODO: remove the light grey on the placeholder
                     input.push_str(default);
                     Cursor::steady();
                     break;
                 } else if input.is_empty() && default.is_empty() {
-                    // TODO: make input have a required parm instead
-                    Cursor::steady();
-                    break;
-                } else {
-                    Cursor::steady();
-                    break;
+                    // TODO: make input required if input is empty and default is empty
                 }
+                Cursor::steady();
+                break;
             }
             Key::Char(c) => {
                 print!("{}", c);
                 input.push_str(c.to_string().as_str());
-                if !input.is_empty() && !placeholder.is_empty() && ph {
-                    // TODO: refactor this
+                if !input.is_empty() && !placeholder.is_empty() && placeholder_visible {
                     Cursor::right(placeholder.len() as u16);
                     Cursor::backspace(placeholder.len() as u16);
-                    ph = false;
+                    placeholder_visible = false;
                 }
             }
             Key::Backspace => {
@@ -58,13 +62,17 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
                     Cursor::backspace(1);
                     input.pop();
                 }
+                // Restore placeholder if needed
                 if input.is_empty() && !placeholder.is_empty() {
                     // TODO: fix this
-                    print!("\x1b[90m"); // light grey
-                    print!("{}{}", placeholder, color::Fg(color::Reset));
+                    print!(
+                        "\x1b[90m{}{}", // light grey
+                        placeholder,
+                        termion::color::Fg(termion::color::Reset)
+                    );
                     io::stdout().flush().unwrap();
                     Cursor::left(placeholder.len() as u16);
-                    ph = true;
+                    placeholder_visible = true;
                 }
             }
             Key::Esc => {
@@ -76,6 +84,7 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
         stdout.flush().unwrap();
     }
 
+    // Reset cursor position and print a new line
     Cursor::beginning();
     Cursor::new_line();
 
