@@ -2,7 +2,6 @@ extern crate termion;
 
 use termion::clear::CurrentLine;
 use termion::color;
-use termion::cursor::{BlinkingBlock, Down, Hide, Left, Restore, Right, Show, SteadyBlock, Up};
 use termion::event::{Event, Key};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
@@ -280,6 +279,8 @@ pub fn footer(name: &str) {
         name
     );
 }
+
+use termion::cursor::{BlinkingBlock, Down, Hide, Left, Restore, Right, Show, SteadyBlock, Up};
 
 /// Represents a text cursor for controlling the display of text in the terminal.
 pub struct Cursor;
