@@ -17,7 +17,7 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
     let mut input = String::new();
     let mut placeholder_visible = true;
 
-    // Print input prompt
+    // Display prompt text
     print!("{}", text);
     io::stdout().flush().unwrap();
 
@@ -92,6 +92,7 @@ pub fn input(text: &str, placeholder: &str, default: &str) -> String {
 }
 
 pub fn list(text: &str, options: &[&str]) -> String {
+    // Enable raw mode for stdout
     let mut stdout = stdout().into_raw_mode().unwrap();
 
     let mut selected_index = 0;
@@ -99,9 +100,11 @@ pub fn list(text: &str, options: &[&str]) -> String {
     Cursor::hide();
 
     loop {
+        // Display prompt text
         println!("{}", text);
         Cursor::beginning();
 
+        // Display options with highlighting for the selected index
         for (index, f) in options.iter().enumerate() {
             if index == selected_index {
                 println!(
