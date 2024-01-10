@@ -1,7 +1,7 @@
 use crate::ui;
 use std::fs;
-use std::io::{self, Write};
-use std::path::{Path, PathBuf};
+use std::io;
+use std::path::Path;
 
 fn normalize_directory(directory: &str) -> String {
     if directory.starts_with("./") {
